@@ -3,128 +3,49 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/novels", label: "Novels" },
+  { 
+    href: "/", 
+    label: "Home",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+    )
+  },
+  { 
+    href: "/novels", 
+    label: "Novels",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+    )
+  },
 ] as const;
 
 export default function Header() {
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Close menu when pathname changes
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [pathname]);
-
-  // Handle Escape key to close menu
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMobileMenuOpen(false);
-    };
-
-    if (isMobileMenuOpen) {
-      window.addEventListener("keydown", handleEscape);
-    }
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [isMobileMenuOpen]);
-
-  // Prevent scrolling when menu is open
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [isMobileMenuOpen]);
 
   return (
-    <header className="border-b border-border bg-bg/95 backdrop-blur-sm sticky top-0 z-40">
-      <div className="container-site flex items-center justify-between h-14">
-        {/* Logo / Wordmark */}
-        <Link
-          href="/"
-          className="font-serif text-xl tracking-tight text-text hover:text-accent transition-colors z-50"
-          aria-label="hook-novel home"
-        >
-          hook
-          <span className="text-text-muted">novel</span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav aria-label="Main navigation" className="hidden md:block">
-          <ul className="flex items-center gap-8 list-none m-0 p-0">
-            {NAV_LINKS.map(({ href, label }) => {
-              const isActive =
-                href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(href);
-
-              return (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className={cn(
-                      "text-sm tracking-wide transition-colors",
-                      isActive
-                        ? "text-text"
-                        : "text-text-muted hover:text-text"
-                    )}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden z-50 p-2 -mr-2 text-text hover:text-accent transition-colors focus:outline-none"
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMobileMenuOpen}
-        >
-          {isMobileMenuOpen ? (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
-        </button>
-
-        {/* Mobile menu overlay */}
-        <div
-          className={cn(
-            "fixed inset-0 bg-bg/98 z-40 transition-all duration-300 md:hidden flex flex-col items-center justify-center pt-20",
-            isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-          )}
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          <nav 
-            aria-label="Mobile navigation" 
-            className="w-full px-6"
-            onClick={(e) => e.stopPropagation()}
+    <>
+      {/* Top Header */}
+      <header className="border-b border-border bg-bg/95 backdrop-blur-sm sticky top-0 z-40">
+        <div className="container-site flex items-center justify-between h-14">
+          {/* Logo / Wordmark */}
+          <Link
+            href="/"
+            className="font-serif text-xl tracking-tight text-text hover:text-accent transition-colors"
+            aria-label="hook-novel home"
           >
-            <ul className="flex flex-col items-center gap-8 list-none m-0 p-0 text-center">
+            hook
+            <span className="text-text-muted">novel</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav aria-label="Main navigation" className="hidden md:block">
+            <ul className="flex items-center gap-8 list-none m-0 p-0">
               {NAV_LINKS.map(({ href, label }) => {
                 const isActive =
                   href === "/"
@@ -132,14 +53,13 @@ export default function Header() {
                     : pathname.startsWith(href);
 
                 return (
-                  <li key={href} className="w-full">
+                  <li key={href}>
                     <Link
                       href={href}
-                      onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
-                        "text-3xl font-serif transition-colors block py-2",
+                        "text-sm tracking-wide transition-colors",
                         isActive
-                          ? "text-text underline underline-offset-8"
+                          ? "text-text"
                           : "text-text-muted hover:text-text"
                       )}
                     >
@@ -151,7 +71,41 @@ export default function Header() {
             </ul>
           </nav>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <nav 
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg border-t border-border pb-safe"
+        aria-label="Mobile navigation"
+      >
+        <ul className="flex items-center justify-around h-16 m-0 p-0 list-none">
+          {NAV_LINKS.map(({ href, label, icon }) => {
+            const isActive =
+              href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(href);
+
+            return (
+              <li key={href} className="flex-1">
+                <Link
+                  href={href}
+                  className={cn(
+                    "flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors",
+                    isActive
+                      ? "text-accent"
+                      : "text-text-muted hover:text-text"
+                  )}
+                >
+                  {icon}
+                  <span className="text-[10px] uppercase tracking-wider font-medium">
+                    {label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
   );
 }
