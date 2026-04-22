@@ -97,7 +97,7 @@ export async function getAllChapters(
   return response.data;
 }
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 
 /**
  * Fetch a single chapter by ID for editing.
@@ -128,8 +128,9 @@ export async function createChapter(
 
   // Clear caches
   revalidatePath("/novels/[slug]", "layout");
-  revalidateTag("chapters", "default");
-  revalidateTag("latest", "default");
+  revalidatePath("/", "layout");
+  updateTag("chapters");
+  updateTag("latest");
 
   return response.data;
 }
@@ -152,8 +153,9 @@ export async function updateChapter(
 
   // Clear caches
   revalidatePath("/novels/[slug]", "layout");
-  revalidateTag("chapters", "default");
-  revalidateTag("latest", "default");
+  revalidatePath("/", "layout");
+  updateTag("chapters");
+  updateTag("latest");
 
   return response.data;
 }
@@ -169,8 +171,9 @@ export async function deleteChapter(id: string): Promise<boolean> {
 
   if (response.success) {
     revalidatePath("/novels/[slug]", "layout");
-    revalidateTag("chapters", "default");
-    revalidateTag("latest", "default");
+    revalidatePath("/", "layout");
+    updateTag("chapters");
+    updateTag("latest");
   }
 
   return response.success;

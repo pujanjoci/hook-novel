@@ -5,7 +5,7 @@
 "use server";
 
 import { fetchGAS } from "@/lib/api";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 import type { Novel, NovelWithChapters } from "@/lib/types";
 
 /**
@@ -85,9 +85,9 @@ export async function createNovel(
     throw new Error(response.error || "Failed to create novel");
   }
 
-  revalidatePath("/");
-  revalidatePath("/novels");
-  revalidateTag("novels", "default");
+  revalidatePath("/", "layout");
+  revalidatePath("/novels", "layout");
+  updateTag("novels");
 
   return response.data;
 }
@@ -108,10 +108,10 @@ export async function updateNovel(
     throw new Error(response.error || "Failed to update novel");
   }
 
-  revalidatePath("/");
-  revalidatePath("/novels");
-  revalidatePath(`/novels/${response.data.slug}`);
-  revalidateTag("novels", "default");
+  revalidatePath("/", "layout");
+  revalidatePath("/novels", "layout");
+  revalidatePath(`/novels/${response.data.slug}`, "page");
+  updateTag("novels");
 
   return response.data;
 }
