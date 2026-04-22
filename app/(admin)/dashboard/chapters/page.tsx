@@ -70,7 +70,7 @@ export default async function AdminChaptersPage({ searchParams }: PageProps) {
             <tbody className="divide-y divide-border">
               {chapters.length > 0 ? (
                 chapters
-                  .sort((a, b) => a.number - b.number)
+                  .sort((a, b) => b.number - a.number)
                   .map((chapter) => (
                   <tr key={chapter.id} className="hover:bg-surface/50 transition-colors">
                     <td className="px-6 py-4 text-sm font-mono text-text-muted text-center">
