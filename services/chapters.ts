@@ -4,7 +4,6 @@
 
 "use server";
 
-import { unstable_cache } from "next/cache";
 import { fetchGAS } from "@/lib/api";
 import type { Chapter, ChapterListItem } from "@/lib/types";
 import { getNovels, getNovelBySlug } from "@/services/novels";
@@ -18,7 +17,7 @@ export async function getChapter(
 ): Promise<Chapter | null> {
   const response = await fetchGAS<Chapter>("getChapter", {
     body: { novelSlug, number: chapterNumber },
-    revalidate: 60, // Reduced to 1 minute for faster updates
+    cache: "no-store",
   });
   if (!response.success) return null;
   return response.data;
@@ -32,7 +31,7 @@ export async function getChapterList(
 ): Promise<ChapterListItem[]> {
   const response = await fetchGAS<ChapterListItem[]>("getChapterList", {
     body: { novelId },
-    revalidate: 300,
+    cache: "no-store",
   });
   if (!response.success) return [];
   return response.data;
@@ -44,10 +43,9 @@ export async function getChapterList(
  * Returns one entry per novel — the newest chapter — sorted by publish date.
  * Cached for 5 minutes.
  */
-export const getLatestChapters = unstable_cache(
-  async (): Promise<
+export async function getLatestChapters(): Promise<
     (ChapterListItem & { novelTitle: string; novelSlug: string })[]
-  > => {
+  > {
     const novels = await getNovels();
     if (!novels || novels.length === 0) return [];
 
@@ -73,13 +71,7 @@ export const getLatestChapters = unstable_cache(
       const dateB = new Date(b.publishedAt || b.createdAt).getTime();
       return dateB - dateA;
     });
-  },
-  ["latest-chapters"],
-  {
-    revalidate: 300, // 5 minutes
-    tags: ["chapters", "latest"],
   }
-);
 
 // ---- Admin Operations ----
 

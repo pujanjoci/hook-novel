@@ -13,7 +13,7 @@ import type { Novel, NovelWithChapters } from "@/lib/types";
  */
 export async function getNovels(): Promise<Novel[]> {
   const response = await fetchGAS<Novel[]>("getNovels", {
-    revalidate: 300, // Revalidate every 5 minutes
+    cache: "no-store",
   });
   if (!response.success || !Array.isArray(response.data)) return [];
   return response.data;
@@ -27,7 +27,7 @@ export async function getNovelBySlug(
 ): Promise<NovelWithChapters | null> {
   const response = await fetchGAS<NovelWithChapters>("getNovelBySlug", {
     body: { slug },
-    revalidate: 300,
+    cache: "no-store",
   });
   if (!response.success) return null;
   return response.data;
@@ -38,7 +38,7 @@ export async function getNovelBySlug(
  */
 export async function getFeaturedNovels(): Promise<Novel[]> {
   const response = await fetchGAS<Novel[]>("getFeaturedNovels", {
-    revalidate: 600, // 10 minutes
+    cache: "no-store",
   });
   if (!response.success || !Array.isArray(response.data)) return [];
   return response.data;
