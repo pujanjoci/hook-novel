@@ -21,9 +21,9 @@ export async function generateMetadata(
 
   return {
     title: novel.title,
-    description: novel.synopsis.slice(0, 160),
+    description: novel.synopsis ? novel.synopsis.slice(0, 160) : "Read this novel on hooknovel.",
     openGraph: {
-      images: [novel.coverUrl],
+      images: novel.coverUrl ? [novel.coverUrl] : [],
     },
   };
 }
@@ -36,7 +36,8 @@ export default async function NovelDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const firstChapter = novel.chapters.find((c) => c.number === 1) || novel.chapters[0];
+  const chapters = novel.chapters || [];
+  const firstChapter = chapters.find((c) => c.number === 1) || chapters[0];
 
   return (
     <article className="py-16 md:py-24">
@@ -86,7 +87,7 @@ export default async function NovelDetailPage({ params }: PageProps) {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase tracking-widest opacity-60">Chapters</span>
-                  <span className="font-medium text-text">{novel.chapters.length}</span>
+                  <span className="font-medium text-text">{chapters.length}</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase tracking-widest opacity-60">Last Updated</span>
@@ -116,13 +117,13 @@ export default async function NovelDetailPage({ params }: PageProps) {
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-serif text-2xl tracking-tight">Contents</h2>
             <span className="text-xs text-text-muted uppercase tracking-widest">
-              {novel.chapters.length} Chapters
+              {chapters.length} Chapters
             </span>
           </div>
 
           <div className="grid gap-px bg-border border border-border overflow-hidden rounded-sm">
-            {novel.chapters.length > 0 ? (
-              novel.chapters
+            {chapters.length > 0 ? (
+              chapters
                 .sort((a, b) => a.number - b.number)
                 .map((chapter) => (
                   <Link

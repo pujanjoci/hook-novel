@@ -6,7 +6,8 @@ import Divider from "@/components/ui/Divider";
 import { formatDate } from "@/lib/utils";
 
 export default async function AdminNovelsPage() {
-  const novels = await getAllNovels();
+  const result = await getAllNovels();
+  const novels = Array.isArray(result) ? result : [];
 
   return (
     <div className="space-y-8">

@@ -63,12 +63,13 @@ export default async function ChapterReaderPage({ params }: PageProps) {
     notFound();
   }
 
-  const hasNext = num < (novel.chapters?.length || 0);
+  const chaptersList = novel.chapters || [];
+  const hasNext = num < chaptersList.length;
   const hasPrev = num > 1;
 
   // Find the prev/next chapters safely
-  const prevChapter = novel.chapters?.find(c => c.number === num - 1);
-  const nextChapter = novel.chapters?.find(c => c.number === num + 1);
+  const prevChapter = chaptersList.find(c => c.number === num - 1);
+  const nextChapter = chaptersList.find(c => c.number === num + 1);
 
   return (
     <div className="min-h-screen bg-bg transition-colors duration-200">

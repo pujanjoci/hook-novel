@@ -98,7 +98,14 @@ export async function fetchGAS<T>(
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown API error";
-    console.error(`[hook-novel] API error (${action}):`, message);
+    
+    // Improved logging for production debugging
+    console.error(`[hook-novel] API CRITICAL ERROR (${action}):`, {
+      message,
+      endpoint: GAS_ENDPOINT?.substring(0, 30) + "...",
+      error
+    });
+
     return {
       success: false,
       data: null as T,

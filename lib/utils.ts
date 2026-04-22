@@ -13,8 +13,13 @@ export function cn(...classes: (string | false | null | undefined)[]): string {
  * Format an ISO date string into a human-readable date.
  * Example: "2024-03-15T10:00:00Z" → "Mar 15, 2024"
  */
-export function formatDate(isoString: string): string {
+export function formatDate(isoString: string | null | undefined): string {
+  if (!isoString) return "n/a";
+  
   const date = new Date(isoString);
+  // Check if date is valid
+  if (isNaN(date.getTime())) return "n/a";
+
   return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",

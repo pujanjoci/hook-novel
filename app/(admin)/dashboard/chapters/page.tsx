@@ -15,15 +15,18 @@ import DeleteChapterButton from "@/components/admin/DeleteChapterButton";
 
 export default async function AdminChaptersPage({ searchParams }: PageProps) {
   const { novelId } = await searchParams;
-  const novels = await getAllNovels();
+  const result = await getAllNovels();
+  const novels = Array.isArray(result) ? result : [];
   
   const selectedNovel = novelId 
     ? novels.find(n => n.id === novelId) 
     : (novels.length > 0 ? novels[0] : null);
 
-  const chapters = selectedNovel 
+  let chaptersResult = selectedNovel 
     ? await getAllChapters(selectedNovel.id) 
     : [];
+    
+  const chapters = Array.isArray(chaptersResult) ? chaptersResult : [];
 
   return (
     <div className="space-y-8">
